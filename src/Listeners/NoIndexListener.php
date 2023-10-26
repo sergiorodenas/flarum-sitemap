@@ -38,6 +38,7 @@ class NoIndexListener
         $type = Arr::get($document->getForumApiDocument(), 'data.type');
 
         $this->logger->info('Type:'.$type);
+        $this->logger->info('Data', $document->getForumApiDocument());
 
         if($type != 'discussions'){
             return;
