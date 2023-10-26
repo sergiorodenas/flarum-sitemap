@@ -21,13 +21,16 @@ class NoIndexHeader implements Middleware
     {
         $response = $handler->handle($request);
 
+        $this->logger->info('URI: '.$request->getUri());
         if(Str::startsWith($request->getUri(), '/d/')){
+            $this->logger->info('ID: '.Str::between($request->getUri(), '/d/', '-'));
+            
             $discussion = Discussion::whereHas('tags', function($query){
                 $query->whereIn('id', [38, 33, 35, 36]);
             })->find(Str::between($request->getUri(), '/d/', '-'));
 
             if($discussion){
-                $response->withAddedHeader('X-Robots-Tag', 'noindex');
+                return $response->withAddedHeader('X-Robots-Tag', 'noindex');
             }
         }
 
