@@ -17,6 +17,7 @@ use Flarum\Settings\SettingsRepositoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Flarum\Extension\ExtensionManager;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class NoIndexListener
 {
@@ -31,13 +32,21 @@ class NoIndexListener
             return;
         }
 
+        Log::info('1');
+
         $type = Arr::get($document->getForumApiDocument(), 'data.type');
+
+        Log::info('Type:' . $type);
 
         if($type != 'discussions'){
             return;
         }
         
         $tags = Arr::get($document->getForumApiDocument(), 'data.relationships.tags.data');
+
+        Log::info('Tags', $tags);
+        Log::info('Meta', $document->meta);
+        Log::info('Head', $document->head);
 
         foreach($tags as $tag){
             if(in_array($tag['id'], $noIndexTags)){
