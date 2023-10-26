@@ -21,7 +21,7 @@ class NoIndexHeader implements Middleware
     {
         $response = $handler->handle($request);
 
-        $this->logger->info('URI: '.$request->getUri());
+        $this->logger->info('URI: '.$request->getRequestTarget());
         if(Str::startsWith($request->getUri(), '/d/')){
             $this->logger->info('ID: '.Str::between($request->getUri(), '/d/', '-'));
             
