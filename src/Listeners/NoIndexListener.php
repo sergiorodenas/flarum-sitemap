@@ -33,6 +33,6 @@ class NoIndexListener
             return;
         }
 
-        $this->logger->info('Content', $document->content);
+        $this->logger->info('Content;'.$document->content);
     }
 }
