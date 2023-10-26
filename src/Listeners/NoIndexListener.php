@@ -32,5 +32,7 @@ class NoIndexListener
         if( ! $this->extensionManager->isEnabled('flarum-tags')){
             return;
         }
+
+        $this->logger->info('Content', $document->content);
     }
 }
