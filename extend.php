@@ -15,7 +15,9 @@ namespace FoF\Sitemap;
 use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Extend;
 use Flarum\Foundation\Paths;
+use Flarum\Http\Middleware\ReferrerPolicyHeader;
 use Flarum\Http\UrlGenerator;
+use FoF\Sitemap\Http\Middleware\NoIndexHeader;
 
 return [
     (new Extend\Frontend('admin'))
@@ -60,6 +62,6 @@ return [
     (new Extend\Event())
         ->subscribe(Listeners\SettingsListener::class),
 
-    (new Extend\Frontend('forum'))
-        ->content(Listeners\NoIndexListener::class),
+    (new Extend\Middleware('forum'))
+        ->insertAfter(ReferrerPolicyHeader::class, NoIndexHeader::class),
 ];
