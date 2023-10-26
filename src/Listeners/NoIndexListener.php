@@ -18,10 +18,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Flarum\Extension\ExtensionManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
+use Psr\Log\LoggerInterface;
 
 class NoIndexListener
 {
-    public function __construct(protected ExtensionManager $extensionManager)
+    public function __construct(protected ExtensionManager $extensionManager, protected LoggerInterface $logger)
     {}
 
     public function __invoke(Document $document, ServerRequestInterface $request)
@@ -32,13 +33,21 @@ class NoIndexListener
             return;
         }
 
+        $this->logger->info('1');
+
         $type = Arr::get($document->getForumApiDocument(), 'data.type');
+
+        $this->logger->info('Type:'.$type);
 
         if($type != 'discussions'){
             return;
         }
         
         $tags = Arr::get($document->getForumApiDocument(), 'data.relationships.tags.data');
+
+        $this->logger->info('Tags', $tags);
+        $this->logger->info('Head', $document->head);
+        $this->logger->info('Meta', $document->meta);
 
         foreach($tags as $tag){
             if(in_array($tag['id'], $noIndexTags)){
