@@ -2,8 +2,8 @@
 
 namespace FoF\Sitemap\Http\Middleware;
 
-use Flarum\Foundation\Config;
-use Illuminate\Support\Arr;
+use Flarum\Discussion\Discussion;
+use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface as Middleware;
@@ -21,8 +21,16 @@ class NoIndexHeader implements Middleware
     {
         $response = $handler->handle($request);
 
-        $this->logger->info('NoIndexMiddleware', ['response', $response]);
+        if(Str::startsWith($request->getUri(), '/d/')){
+            $discussion = Discussion::whereHas('tags', function($query){
+                $query->whereIn('id', [38, 33, 35, 36]);
+            })->find(Str::between($request->getUri(), '/d/', '-'));
 
-        return $response->withAddedHeader('Referrer-Policy', $this->policy);
+            if($discussion){
+                $response->withAddedHeader('X-Robots-Tag', 'noindex');
+            }
+        }
+
+        return $response;
     }
 }
