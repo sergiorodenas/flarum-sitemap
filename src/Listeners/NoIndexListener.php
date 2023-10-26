@@ -33,23 +33,7 @@ class NoIndexListener
             return;
         }
 
-        $type = Arr::get($document->getForumApiDocument(), 'data.type');
-
-        if($type != 'discussions'){
-            return;
-        }
-        
-        $tags = Arr::get($document->getForumApiDocument(), 'data.relationships.tags.data');
-
-        $this->logger->info('Tags', $tags);
-        $this->logger->info('Head', $document->head);
         $this->logger->info('Meta', $document->meta);
-
-        foreach($tags as $tag){
-            if(in_array($tag['id'], $noIndexTags)){
-                $document->head[] = '<meta name="robots" content="noindex">';
-                return;
-            }
-        }
+        $this->logger->info('Head', $document->head);
     }
 }
